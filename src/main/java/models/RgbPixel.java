@@ -21,13 +21,17 @@ public class RgbPixel {
         return blue;
     }
 
-    public int sumOfPixels(){
+    public int sumOfPixels() {
         return this.red + this.green + this.blue;
+    }
+
+    public int pixelsToIntValue() {
+        return 65536 * this.red + 256 * this.green + this.blue;
     }
 
 
     public RgbPixel(int rgbPixel) {
-        this.red =  (rgbPixel >> 16) & 0x0ff;
+        this.red = (rgbPixel >> 16) & 0x0ff;
         this.green = (rgbPixel >> 8) & 0x0ff;
         this.blue = (rgbPixel) & 0x0ff;
     }
