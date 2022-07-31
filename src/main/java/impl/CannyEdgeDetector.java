@@ -18,13 +18,15 @@ public class CannyEdgeDetector implements EdgeDetector {
 
     private static final int[][] PIXEL_EDGES = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
+    private static final int LOW_BOUND  = 0;
+
     @Override
     public List<Integer> findEdges(RgbPixel[][] inputPixels, int height, int width) {
         return null;
     }
 
-    private int clampClip(int x, int l, int u) {
-        return Math.min(u, Math.max(l, x));
+    private int clampClip(int x, int u) {
+        return Math.min(u, Math.max(LOW_BOUND, x));
     }
 
 
@@ -48,8 +50,8 @@ public class CannyEdgeDetector implements EdgeDetector {
                 double acc = 0;
                 for (int i = 0; i <= GAUSSIAN_KERNEL.length; i++) {
                     for (int j = 0; j <= GAUSSIAN_KERNEL.length; j++) {
-                        var xn = clampClip(x + i - offset, 0, width - 1);
-                        var yn = clampClip(y + j - offset, 0, height - 1);
+                        var xn = clampClip(x + i - offset, width - 1);
+                        var yn = clampClip(y + j - offset, height - 1);
                         acc += (inputPixels[xn][yn]) * GAUSSIAN_KERNEL[i][j];
                     }
                     blurred[x][y] = acc;
