@@ -6,16 +6,20 @@ import models.ImageData;
 import models.RgbPixel;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-@Component
-@Singleton
+
 public class BaseImageReadWriter implements ImageReadWriter {
 
+    @Inject
+    public BaseImageReadWriter(){
+
+    }
 
     @Override
     public ImageData readImage(String path) throws IOException {
@@ -39,9 +43,9 @@ public class BaseImageReadWriter implements ImageReadWriter {
     }
 
     private RgbPixel[][] getRgbPixels(BufferedImage image) {
-        var imagePixels = new RgbPixel[image.getHeight()][image.getWidth()];
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
+        var imagePixels = new RgbPixel[image.getWidth()][image.getHeight()];
+        for (int i = 0; i < image.getWidth(); i++) {
+            for (int j = 0; j < image.getHeight(); j++) {
                 imagePixels[i][j] = new RgbPixel(image.getRGB(i, j));
             }
         }

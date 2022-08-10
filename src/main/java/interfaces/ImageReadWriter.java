@@ -1,5 +1,6 @@
 package interfaces;
 
+import dagger.Component;
 import models.ImageData;
 
 import java.io.FileNotFoundException;

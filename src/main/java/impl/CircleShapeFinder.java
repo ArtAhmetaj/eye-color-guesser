@@ -14,12 +14,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Component
-@Singleton
 public class CircleShapeFinder implements ShapeFinder<Circle> {
 
+    private final EdgeDetector edgeDetector;
+
     @Inject
-    CannyEdgeDetector cannyEdgeDetector;
+    public CircleShapeFinder(EdgeDetector edgeDetector){
+        this.edgeDetector = edgeDetector;
+    }
 
     @Override
     public List<Circle> findShapes(RgbPixel[][] rgbPixels, int width, int height) {
@@ -33,7 +35,7 @@ public class CircleShapeFinder implements ShapeFinder<Circle> {
             }
         }
         var acc = new HashMap<double[], Integer>();
-        for (double[] edges : cannyEdgeDetector.findEdges(rgbPixels, height, width)) {
+        for (double[] edges : edgeDetector.findEdges(rgbPixels, height, width)) {
             for (double[] point : points) {
                 var radius = point[0];
                 var a = edges[0] - point[1];

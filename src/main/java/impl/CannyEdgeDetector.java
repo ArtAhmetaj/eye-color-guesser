@@ -4,12 +4,12 @@ import dagger.Component;
 import interfaces.EdgeDetector;
 import models.RgbPixel;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.List;
 
-@Component
-@Singleton
+
 public class CannyEdgeDetector implements EdgeDetector {
 
     private static final int[][] GAUSSIAN_KERNEL = {
@@ -28,6 +28,11 @@ public class CannyEdgeDetector implements EdgeDetector {
 
     private static final int HIGHER_EDGE_BOUND = 40;
 
+    @Inject
+    public CannyEdgeDetector() {
+
+    }
+
     @Override
     public double[][] findEdges(RgbPixel[][] inputPixels, int height, int width) {
         // check into offloading this somewhere else
@@ -35,7 +40,7 @@ public class CannyEdgeDetector implements EdgeDetector {
         var blurred = computeBlur(grayScaled, height, width);
         var gradientAndDirection = computeGradient(blurred, height, width);
         var filteredGradient = filterOutNonMaximum(gradientAndDirection[0], gradientAndDirection[1], height, width);
-        return filterOutEdges(filteredGradient, height, width, LOWER_EDGE_BOUND,HIGHER_EDGE_BOUND);
+        return filterOutEdges(filteredGradient, height, width, LOWER_EDGE_BOUND, HIGHER_EDGE_BOUND);
 
 
     }
@@ -46,12 +51,12 @@ public class CannyEdgeDetector implements EdgeDetector {
 
 
     //TODO: should do an image processor instead, easier testing than reflection with private methods
-    private double[][] computeGrayScale(RgbPixel[][] rgbRgbPixels, int height, int width) {
+    private double[][] computeGrayScale(RgbPixel[][] rgbPixels, int height, int width) {
 
         var grayScaledPixels = new double[width][height];
-        for (int i = 0; i < rgbRgbPixels.length; i++) {
-            for (int j = 0; j < rgbRgbPixels[0].length; j++) {
-                grayScaledPixels[i][j] = rgbRgbPixels[i][j].sumOfPixels() / 3.0;
+        for (int i = 608; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                grayScaledPixels[i][j] = rgbPixels[i][j].sumOfPixels() / 3.0;
             }
         }
         return grayScaledPixels;

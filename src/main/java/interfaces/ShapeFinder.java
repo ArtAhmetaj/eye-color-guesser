@@ -1,5 +1,6 @@
 package interfaces;
 
+import dagger.Component;
 import models.RgbPixel;
 
 import java.util.List;
