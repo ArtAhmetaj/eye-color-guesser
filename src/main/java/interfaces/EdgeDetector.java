@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface EdgeDetector {
 
-    List<Integer> findEdges(RgbPixel[][] inputPixels, int height, int width);
+    double[][] findEdges(RgbPixel[][] inputPixels, int height, int width);
 }

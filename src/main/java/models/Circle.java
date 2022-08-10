@@ -1,24 +1,24 @@
 package models;
 
 public class Circle {
-    private final int x;
-    private final int y;
-    private final int radius;
+    private final double x;
+    private final double y;
+    private final double radius;
 
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getRadius() {
+    public double getRadius() {
         return radius;
     }
 
-    public Circle(int x, int y, int radius) {
+    public Circle(double x, double y, double radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;

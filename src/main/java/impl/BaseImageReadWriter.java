@@ -6,12 +6,14 @@ import models.ImageData;
 import models.RgbPixel;
 
 import javax.imageio.ImageIO;
+import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Component
+@Singleton
 public class BaseImageReadWriter implements ImageReadWriter {
 
 
