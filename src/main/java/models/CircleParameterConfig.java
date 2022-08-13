@@ -27,8 +27,8 @@ public class CircleParameterConfig {
 
     public CircleParameterConfig(int height, int width) {
         // 10 percent for min and 40 percent for max
-        this.radiusMin = (int)((width * 0.1) + (height * 0.1))/2;
-        this.radiusMax = (int)((width * 0.4) + (height * 0.4))/2;
+        this.radiusMin = 50;
+        this.radiusMax = 200;
         this.steps = 100;
         this.threshold = 0.4;
     }

@@ -2,7 +2,9 @@ package interfaces;
 
 import models.RgbPixel;
 
+import java.util.List;
+
 public interface EdgeDetector {
 
-    double[][] findEdges(RgbPixel[][] inputPixels, int width, int height);
+    List<List<Integer>> findEdges(RgbPixel[][] inputPixels, int width, int height);
 }

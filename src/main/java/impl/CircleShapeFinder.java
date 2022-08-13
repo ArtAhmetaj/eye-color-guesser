@@ -1,6 +1,6 @@
 package impl;
 
-import helper.CircleShapeHelper;
+import helper.ShapeHelper;
 import interfaces.EdgeDetector;
 import interfaces.ShapeFinder;
 import models.Circle;
@@ -30,28 +30,27 @@ public class CircleShapeFinder implements ShapeFinder<Circle> {
         for (int r = circleParameterConfig.getRadiusMin(); r <= circleParameterConfig.getRadiusMax(); r++) {
             var steps = circleParameterConfig.getSteps();
             for (int i = 0; i < steps; i++) {
-                points.add(CircleShapeHelper.computeCirclePropertiesForRange(r, i, steps));
+                points.add(ShapeHelper.computeCirclePropertiesForRange(r, i, steps));
             }
         }
-        var acc = new HashMap<double[], Integer>();
-        for (double[] edges : edgeDetector.findEdges(rgbPixels, width, height)) {
+        var acc = new HashMap<List<Integer>, Integer>();
+        var edges = edgeDetector.findEdges(rgbPixels, width, height);
+        for (var edge : edges) {
             for (double[] point : points) {
-                var radius = point[0];
-                var a = edges[0] - point[1];
-                var b = edges[1] - point[2];
-                var roughEdges = new double[]{a, b, radius};
-                acc.putIfAbsent(new double[]{a, b, radius}, 0);
-                acc.merge(roughEdges, 1, Integer::sum);
+                int radius = (int) point[0];
+                int a = (int) (edge.get(0) - point[1]);
+                int b = (int) (edge.get(1) - point[2]);
+                var roughEdges = List.of(a, b, radius);
+                acc.merge(roughEdges, 0, (previous, value) -> previous + value + 1);
             }
         }
 
         var circles = new ArrayList<Circle>();
-        var sortedAcc = CircleShapeHelper.sortEdgesMap(acc);
+        var sortedAcc = ShapeHelper.sortEdgesMap(acc);
         sortedAcc.forEach((k, v) -> {
-            //TODO: horrible fix with 1.0, put in a double variable and clean up code
-            if ((v * 1.0 / circleParameterConfig.getSteps()) >= circleParameterConfig.getThreshold()
-                    && CircleShapeHelper.isEdgeInAllCircles(k, circles)) {
-                circles.add(new Circle(k[0], k[1], k[2]));
+            if (((double) v / circleParameterConfig.getSteps()) >= circleParameterConfig.getThreshold()
+                    && ShapeHelper.isEdgeInAllCircles(k, circles)) {
+                circles.add(new Circle(k.get(0), k.get(1), k.get(2)));
             }
 
         });
