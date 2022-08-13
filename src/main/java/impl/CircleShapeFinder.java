@@ -1,6 +1,5 @@
 package impl;
 
-import dagger.Component;
 import helper.CircleShapeHelper;
 import interfaces.EdgeDetector;
 import interfaces.ShapeFinder;
@@ -9,8 +8,8 @@ import models.CircleParameterConfig;
 import models.RgbPixel;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class CircleShapeFinder implements ShapeFinder<Circle> {
     private final EdgeDetector edgeDetector;
 
     @Inject
-    public CircleShapeFinder(EdgeDetector edgeDetector){
+    public CircleShapeFinder(EdgeDetector edgeDetector) {
         this.edgeDetector = edgeDetector;
     }
 
@@ -35,13 +34,13 @@ public class CircleShapeFinder implements ShapeFinder<Circle> {
             }
         }
         var acc = new HashMap<double[], Integer>();
-        for (double[] edges : edgeDetector.findEdges(rgbPixels, height, width)) {
+        for (double[] edges : edgeDetector.findEdges(rgbPixels, width, height)) {
             for (double[] point : points) {
                 var radius = point[0];
                 var a = edges[0] - point[1];
                 var b = edges[1] - point[2];
                 var roughEdges = new double[]{a, b, radius};
-                acc.computeIfAbsent(new double[]{a, b, radius}, k -> 0);
+                acc.putIfAbsent(new double[]{a, b, radius}, 0);
                 acc.merge(roughEdges, 1, Integer::sum);
             }
         }

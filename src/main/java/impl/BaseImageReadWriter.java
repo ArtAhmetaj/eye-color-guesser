@@ -1,13 +1,11 @@
 package impl;
 
-import dagger.Component;
 import interfaces.ImageReadWriter;
 import models.ImageData;
 import models.RgbPixel;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;

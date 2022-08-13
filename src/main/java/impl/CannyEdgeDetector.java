@@ -6,18 +6,19 @@ import models.RgbPixel;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
 
 public class CannyEdgeDetector implements EdgeDetector {
 
-    private static final int[][] GAUSSIAN_KERNEL = {
-            {1 / 256, 4 / 256, 6 / 256, 4 / 256, 1 / 256},
-            {4 / 256, 16 / 256, 24 / 256, 16 / 256, 4 / 256},
-            {6 / 256, 24 / 256, 36 / 256, 24 / 256, 6 / 256},
-            {4 / 256, 16 / 256, 24 / 256, 16 / 256, 4 / 256},
-            {1 / 256, 4 / 256, 6 / 256, 4 / 256, 1 / 256}
+    private static final double[][] GAUSSIAN_KERNEL = {
+            {1 / 256.0, 4 / 256.0, 6 / 256.0, 4 / 256.0, 1 / 256.0},
+            {4 / 256.0, 16 / 256.0, 24 / 256.0, 16 / 256.0, 4 / 256.0},
+            {6 / 256.0, 24 / 256.0, 36 / 256.0, 24 / 256.0, 6 / 256.0},
+            {4 / 256.0, 16 / 256.0, 24 / 256.0, 16 / 256.0, 4 / 256.0},
+            {1 / 256.0, 4 / 256.0, 6 / 256.0, 4 / 256.0, 1 / 256.0}
     };
 
     private static final int[][] PIXEL_EDGES = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
@@ -34,15 +35,13 @@ public class CannyEdgeDetector implements EdgeDetector {
     }
 
     @Override
-    public double[][] findEdges(RgbPixel[][] inputPixels, int height, int width) {
+    public double[][] findEdges(RgbPixel[][] inputPixels, int width, int height) {
         // check into offloading this somewhere else
-        var grayScaled = computeGrayScale(inputPixels, height, width);
-        var blurred = computeBlur(grayScaled, height, width);
-        var gradientAndDirection = computeGradient(blurred, height, width);
-        var filteredGradient = filterOutNonMaximum(gradientAndDirection[0], gradientAndDirection[1], height, width);
-        return filterOutEdges(filteredGradient, height, width, LOWER_EDGE_BOUND, HIGHER_EDGE_BOUND);
-
-
+        var grayScaled = computeGrayScale(inputPixels, width, height);
+        var blurred = computeBlur(grayScaled, width, height);
+        var gradientAndDirection = computeGradient(blurred, width, height);
+        var filteredGradient = filterOutNonMaximum(gradientAndDirection[0], gradientAndDirection[1], width, height);
+        return filterOutEdges(filteredGradient, width, height, LOWER_EDGE_BOUND, HIGHER_EDGE_BOUND);
     }
 
     private int clampClip(int x, int u) {
@@ -51,10 +50,10 @@ public class CannyEdgeDetector implements EdgeDetector {
 
 
     //TODO: should do an image processor instead, easier testing than reflection with private methods
-    private double[][] computeGrayScale(RgbPixel[][] rgbPixels, int height, int width) {
+    private double[][] computeGrayScale(RgbPixel[][] rgbPixels, int width, int height) {
 
         var grayScaledPixels = new double[width][height];
-        for (int i = 608; i < width; i++) {
+        for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 grayScaledPixels[i][j] = rgbPixels[i][j].sumOfPixels() / 3.0;
             }
@@ -62,17 +61,17 @@ public class CannyEdgeDetector implements EdgeDetector {
         return grayScaledPixels;
     }
 
-    private double[][] computeBlur(double[][] inputPixels, int height, int width) {
-        var offset = GAUSSIAN_KERNEL.length / 2;
+    private double[][] computeBlur(double[][] inputPixels, int width, int height) {
+        var offset = Math.sqrt(GAUSSIAN_KERNEL.length);
         var blurred = new double[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 double acc = 0;
-                for (int i = 0; i < GAUSSIAN_KERNEL.length; i++) {
-                    for (int j = 0; j < GAUSSIAN_KERNEL.length; j++) {
-                        var xn = clampClip(x + i - offset, width - 1);
-                        var yn = clampClip(y + j - offset, height - 1);
-                        acc += (inputPixels[xn][yn]) * GAUSSIAN_KERNEL[i][j];
+                for (int a = 0; a < GAUSSIAN_KERNEL.length; a++) {
+                    for (int b = 0; b < GAUSSIAN_KERNEL.length; b++) {
+                        var xn = clampClip((int) (x + a - offset), width - 1);
+                        var yn = clampClip((int) (y + b - offset), height - 1);
+                        acc += (inputPixels[xn][yn]) * GAUSSIAN_KERNEL[a][b];
                     }
                     blurred[x][y] = acc;
                 }
@@ -82,7 +81,7 @@ public class CannyEdgeDetector implements EdgeDetector {
     }
 
     //TODO: bad idea to do a 3d matrix, tuple would be a better fit
-    private double[][][] computeGradient(double[][] inputPixels, int height, int width) {
+    private double[][][] computeGradient(double[][] inputPixels, int width, int height) {
         var gradient = new double[width][height];
         var direction = new double[width][height];
         for (int x = 0; x < width; x++) {
@@ -100,7 +99,7 @@ public class CannyEdgeDetector implements EdgeDetector {
         return new double[][][]{gradient, direction};
     }
 
-    private double[][] filterOutNonMaximum(double[][] gradient, double[][] direction, int height, int width) {
+    private double[][] filterOutNonMaximum(double[][] gradient, double[][] direction, int width, int height) {
         for (int x = 1; x < width - 1; x++) {
             for (int y = 1; y < height - 1; y++) {
                 var angle = direction[x][y] > 0 ? direction[x][y] : direction[x][y] + Math.PI;
@@ -119,8 +118,31 @@ public class CannyEdgeDetector implements EdgeDetector {
 
     }
 
+    /*
+
+def filter_strong_edges(gradient, width, height, low, high):
+    # Keep strong edges
+    keep = set()
+    for x in range(width):
+        for y in range(height):
+            if gradient[x, y] > high:
+                keep.add((x, y))
+
+    # Keep weak edges next to a pixel to keep
+    lastiter = keep
+    while lastiter:
+        newkeep = set()
+        for x, y in lastiter:
+            for a, b in ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)):
+                if gradient[x + a, y + b] > low and (x+a, y+b) not in keep:
+                    newkeep.add((x+a, y+b))
+        keep.update(newkeep)
+        lastiter = newkeep
+
+    return list(keep)
+     */
     //TODO: fix differences between int and double arrays, maybe replace with generic List<?>
-    private double[][] filterOutEdges(double[][] gradient, int height, int width, int low, int high) {
+    private double[][] filterOutEdges(double[][] gradient, int width, int height, int low, int high) {
         var keptSet = new HashSet<double[]>();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -132,7 +154,9 @@ public class CannyEdgeDetector implements EdgeDetector {
                     var newKeptSet = new HashSet<double[]>();
                     for (double[] values : lastIteration) {
                         for (int[] pixelEdge : PIXEL_EDGES) {
-                            if (gradient[(int) values[0] + pixelEdge[0]][(int) values[1] + pixelEdge[1]] > low && !(keptSet.contains(new double[]{(int) values[0] + pixelEdge[0], (int) values[1] + pixelEdge[1]}))) {
+                            //TODO: change to arraylist, to not have issues with array equalness on hashset
+                            if (gradient[(int) values[0] + pixelEdge[0]][(int) values[1] + pixelEdge[1]] > low &&
+                                    !(keptSet.contains(new double[]{(int) values[0] + pixelEdge[0], (int) values[1] + pixelEdge[1]}))) {
                                 newKeptSet.add(new double[]{(int) values[0] + pixelEdge[0], (int) values[1] + pixelEdge[1]});
                             }
                         }

@@ -1,10 +1,4 @@
-import dagger.Component;
-import impl.CircleShapeFinder;
-import interfaces.EdgeDetector;
-
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Main {
 
@@ -17,7 +11,7 @@ public class Main {
         try {
 
             var result = imageReader.readImage( "./test-images/art_eye.jpg");
-           var circles =  shapeFinder.findShapes(result.getRgbPixels(),result.getHeight(),result.getWidth());
+           var circles =  shapeFinder.findShapes(result.getRgbPixels(),result.getWidth(),result.getHeight());
             System.out.println(circles);
         } catch (IOException e) {
          e.printStackTrace();

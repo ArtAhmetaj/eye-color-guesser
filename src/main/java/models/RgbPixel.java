@@ -49,4 +49,13 @@ public class RgbPixel {
     public int hashCode() {
         return Objects.hash(red, green, blue);
     }
+
+    @Override
+    public String toString() {
+        return "RgbPixel{" +
+                "red=" + red +
+                ", green=" + green +
+                ", blue=" + blue +
+                '}';
+    }
 }
