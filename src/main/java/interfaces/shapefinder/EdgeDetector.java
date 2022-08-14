@@ -1,4 +1,4 @@
-package interfaces;
+package interfaces.shapefinder;
 
 import models.RgbPixel;
 

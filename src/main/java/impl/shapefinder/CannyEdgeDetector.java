@@ -1,11 +1,10 @@
-package impl;
+package impl.shapefinder;
 
-import interfaces.EdgeDetector;
+import interfaces.shapefinder.EdgeDetector;
 import models.RgbPixel;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 

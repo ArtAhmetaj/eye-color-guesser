@@ -1,7 +1,7 @@
 import dagger.Component;
-import impl.BaseImageReadWriter;
-import impl.CircleShapeFinder;
-import modules.EdgeDetectorModule;
+import impl.shapefinder.BaseImageReadWriter;
+import impl.shapefinder.CircleShapeFinder;
+import modules.shapefinder.EdgeDetectorModule;
 
 import javax.inject.Singleton;
 

@@ -1,4 +1,4 @@
-package models;
+package models.shapefinder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,8 @@ public class Circle extends Shape {
             shapeEdges.add(calculateDistanceOfCenterToRadius(direction));
         }
 
-        var horizontalBounds = new int[]{-1, -1};
-        var verticalBounds = new int[]{-1, -1};
+        var horizontalBounds = new int[]{Integer.MIN_VALUE, Integer.MAX_VALUE};
+        var verticalBounds = new int[]{Integer.MIN_VALUE, Integer.MAX_VALUE};
         for (var edge : shapeEdges) {
             if (edge[0] > horizontalBounds[0]) horizontalBounds[0] = (int) edge[0];
             if (edge[0] < horizontalBounds[1]) horizontalBounds[1] = (int) edge[0];
@@ -63,7 +63,7 @@ public class Circle extends Shape {
             if (edge[1] < verticalBounds[1]) verticalBounds[1] = (int) edge[1];
         }
 
-        return List.of(horizontalBounds,verticalBounds);
+        return List.of(horizontalBounds, verticalBounds);
     }
 
     private double[] calculateDistanceOfCenterToRadius(Direction direction) {

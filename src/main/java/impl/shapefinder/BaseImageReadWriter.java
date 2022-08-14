@@ -1,6 +1,6 @@
-package impl;
+package impl.shapefinder;
 
-import interfaces.ImageReadWriter;
+import interfaces.shapefinder.ImageReadWriter;
 import models.ImageData;
 import models.RgbPixel;
 

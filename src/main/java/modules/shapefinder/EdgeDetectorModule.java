@@ -1,11 +1,9 @@
-package modules;
+package modules.shapefinder;
 
 import dagger.Binds;
 import dagger.Module;
-import impl.BaseImageReadWriter;
-import impl.CannyEdgeDetector;
-import interfaces.EdgeDetector;
-import interfaces.ImageReadWriter;
+import impl.shapefinder.CannyEdgeDetector;
+import interfaces.shapefinder.EdgeDetector;
 
 import javax.inject.Singleton;
 

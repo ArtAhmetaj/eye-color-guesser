@@ -2,7 +2,7 @@ package util;
 
 import models.ImageData;
 import models.RgbPixel;
-import models.Shape;
+import models.shapefinder.Shape;
 
 import java.util.ArrayList;
 import java.util.List;

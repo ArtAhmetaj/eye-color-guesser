@@ -1,15 +1,14 @@
-package impl;
+package impl.shapefinder;
 
-import helper.ShapeHelper;
-import interfaces.EdgeDetector;
-import interfaces.ShapeFinder;
-import models.Circle;
-import models.CircleParameterConfig;
+import helper.shapefinder.ShapeHelper;
+import interfaces.shapefinder.EdgeDetector;
+import interfaces.shapefinder.ShapeFinder;
+import models.shapefinder.Circle;
+import models.shapefinder.CircleParameterConfig;
 import models.RgbPixel;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

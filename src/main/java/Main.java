@@ -1,24 +1,36 @@
-import exceptions.TooManyCirclesFoundException;
+import impl.shapefinder.BaseImageReadWriter;
+import impl.shapefinder.CircleShapeFinder;
+import models.shapefinder.Circle;
+import models.RgbPixel;
 import util.ImageUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 public class Main {
+    //TODO: offload to constant class
+    private static final int MAXIMUM_CIRCLES_THRESHOLD = 5;
 
+    private static final String CURRENT_PATH = "/test-images/art_eye.jpg";
 
     public static void main(String[] args) {
         var appModule = DaggerAppModule.create();
-        var shapeFinder = appModule.shapeFinder();
-        var imageReader = appModule.imageReadWriter();
+        CircleShapeFinder shapeFinder = appModule.shapeFinder();
+        BaseImageReadWriter imageReader = appModule.imageReadWriter();
 
         try {
-            var imageData = imageReader.readImage("./test-images/art_eye.jpg");
+            var imageData = imageReader.readImage(CURRENT_PATH);
             var circles = shapeFinder.findShapes(imageData.getRgbPixels(), imageData.getWidth(), imageData.getHeight());
-            var croppedPixels  = ImageUtil.cropImageBasedOnShape(imageData,circles.get(0));
-            // use kmeans
+            var circlesPixelsMapping = new HashMap<Circle,List<RgbPixel>>();
+            for(Circle circle : circles){
+                circlesPixelsMapping.put(circle,ImageUtil.cropImageBasedOnShape(imageData,circle));
+            }
+
 
         } catch (IOException e) {
-            e.printStackTrace();
+
+            System.out.printf("Error during IO with message: %s", e.getMessage());
         }
     }
 }

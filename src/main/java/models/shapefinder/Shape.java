@@ -1,4 +1,4 @@
-package models;
+package models.shapefinder;
 
 import java.util.List;
 

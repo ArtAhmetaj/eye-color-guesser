@@ -1,6 +1,6 @@
-package helper;
+package helper.shapefinder;
 
-import models.Circle;
+import models.shapefinder.Circle;
 
 import java.util.*;
 
