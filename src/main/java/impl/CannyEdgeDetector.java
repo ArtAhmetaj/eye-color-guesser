@@ -24,9 +24,9 @@ public class CannyEdgeDetector implements EdgeDetector {
 
     private static final int IMAGE_LOWER_EDGE = 0;
 
-    private static final int LOWER_EDGE_BOUND = 40;
+    private static final int LOWER_EDGE_BOUND = 10;
 
-    private static final int HIGHER_EDGE_BOUND = 60;
+    private static final int HIGHER_EDGE_BOUND = 40;
 
     @Inject
     public CannyEdgeDetector() {
@@ -147,7 +147,6 @@ public class CannyEdgeDetector implements EdgeDetector {
             keptSet.addAll(newKeptSet);
             lastIteration = newKeptSet;
         }
-
 
         return new ArrayList<>(keptSet);
 

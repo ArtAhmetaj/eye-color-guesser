@@ -27,10 +27,10 @@ public class CircleShapeFinder implements ShapeFinder<Circle> {
         // some values are hardcoded in config, could be changed dynamically
         CircleParameterConfig circleParameterConfig = new CircleParameterConfig(height, width);
         var points = new ArrayList<double[]>();
-        for (int r = circleParameterConfig.getRadiusMin(); r <= circleParameterConfig.getRadiusMax(); r++) {
+        for (int radius = circleParameterConfig.getRadiusMin(); radius <= circleParameterConfig.getRadiusMax(); radius++) {
             var steps = circleParameterConfig.getSteps();
             for (int i = 0; i < steps; i++) {
-                points.add(ShapeHelper.computeCirclePropertiesForRange(r, i, steps));
+                points.add(ShapeHelper.computeCirclePropertiesForRange(radius, i, steps));
             }
         }
         var acc = new HashMap<List<Integer>, Integer>();

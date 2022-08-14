@@ -1,3 +1,6 @@
+import exceptions.TooManyCirclesFoundException;
+import util.ImageUtil;
+
 import java.io.IOException;
 
 public class Main {
@@ -8,10 +11,12 @@ public class Main {
         var shapeFinder = appModule.shapeFinder();
         var imageReader = appModule.imageReadWriter();
 
-        try { //471,304 200
-            var result = imageReader.readImage("./test-images/google_eye.jpg");
-            var circles = shapeFinder.findShapes(result.getRgbPixels(), result.getWidth(), result.getHeight());
-            System.out.println(circles);
+        try {
+            var imageData = imageReader.readImage("./test-images/art_eye.jpg");
+            var circles = shapeFinder.findShapes(imageData.getRgbPixels(), imageData.getWidth(), imageData.getHeight());
+            var croppedPixels  = ImageUtil.cropImageBasedOnShape(imageData,circles.get(0));
+            // use kmeans
+
         } catch (IOException e) {
             e.printStackTrace();
         }
