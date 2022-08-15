@@ -29,6 +29,11 @@ public class RgbPixel {
         return 65536 * this.red + 256 * this.green + this.blue;
     }
 
+    public RgbPixel(int red, int green, int blue){
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+    }
 
     public RgbPixel(int rgbPixel) {
         this.red = (rgbPixel >> 16) & 0x0ff;
